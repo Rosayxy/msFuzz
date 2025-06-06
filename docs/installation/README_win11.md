@@ -35,8 +35,6 @@ reboot
 
 并且这步进行了适配 Win11 uefi boot 的操作   
 ```bash
-cd ~/kAFL
-make deploy -- --tags examples,examples-template-windows
 # 这里先把 harness 和 agent 编译出来，然后一起部署到 image 里面
 cd kafl/examples/windows_x86_64/
 mkdir -p bin/driver 
