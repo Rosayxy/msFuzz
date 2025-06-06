@@ -29,3 +29,4 @@
 
 ## How to use
 - [_How to use_](docs/installation/README.md)
+- [_How to use for Win11](docs/installation/README_win11.md)
