@@ -1,4 +1,6 @@
 # how to use for Win11
+注：本次部署并非在 ~/kAFL 目录下，而是在 ~/tmp2/kAFL 目录下，部署的时候可能需要修改一些绝对路径    
+此外，配套的 kafl/examples 从 [kafl.targets.win11](https://github.com/Rosayxy/kafl.targets.win11) 仓库 clone 的，在进行部署的时候，可能需要修改一波绝对路径   
 
 # 0. Tested Environment <a name="section-0"></a>
 ----------------------------------
@@ -20,7 +22,7 @@ sudo apt-get install gcc git make curl vim python3 python3-venv -y
 ----------------------------------
 ```bash
 cd ~
-git clone https://github.com/0dayResearchLab/msFuzz.git kAFL
+git clone https://github.com/Rosayxy/msFuzz.git kAFL
 cd kAFL
 make deploy
 reboot
@@ -28,6 +30,10 @@ reboot
 
 # 3. Build the Windows VM Template <a name="section-3"></a>
 ----------------------------------
+
+因为之前的 installation 中，*Import into libvirt* 这步一直超时，且难以直接运行 qemu 排查，以及看到了 kAFL 本身是裸跑 qemu-system 的形式，所以就直接把第二次和第一次用 ansible 的操作合二为一了，直接在 qemu image 里面用 ansible 把我们的 agent 和 harness 塞进去    
+
+并且这步进行了适配 Win11 uefi boot 的操作   
 ```bash
 cd ~/kAFL
 make deploy -- --tags examples,examples-template-windows
@@ -57,9 +63,11 @@ cp -r ../../windows_x86_64/bin .
 mkdir output-windows_1
 cd output-windows_1
 qemu-img create -f qcow2 win10.qcow2 64G
-make build # 这一步中，需要 vnc 连上去，先一直按住 esc 进 bios，然后 exit shell, 选 uefi boot，点进去第一个
+make build 
+# make build 这一步中，需要 vnc 连上去，先一直按住 esc 进 bios，然后 exit shell, 选 uefi boot，点进去第一个
 # 之后启动的时候，会告诉你大概是你挂在的磁盘不可用，此时需要 delete partition 然后 create partition, 选择大小最大的那个分区（大概有 63.9G 吧）点 next 就行了
 ```
+
 注：调试的时候可以用以下命令   
 
 ```bash
@@ -72,6 +80,8 @@ make build # 这一步中，需要 vnc 连上去，先一直按住 esc 进 bios�
 ```
 
 然后接 vnc 看输出
+
+
 # 4. Run Fuzz <a name="section-4"></a>
 ----------------------------------
 ```bash
